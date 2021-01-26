@@ -89,7 +89,18 @@ func main()  {
 			time.Sleep(time.Duration(timerTime)*time.Millisecond)
 			//开启任务
 			log.Println("时间到达，开始执行……")
-			start(seckill,5)
+
+			killDate:=config.Read("config","kill_time")
+			kt,_:=time.ParseInLocation("2006-01-02 15:04:05",killDate,loc)
+			killTime:=kt.UnixNano()/1e6
+
+			start(seckill,100)
+			nowLocalTime = time.Now().UnixNano()/1e6
+			if killTime-nowLocalTime>0 {
+				log.Println("继续执行代码。。。")
+				start(seckill,10)
+			}
+
 			wg.Wait()
 		}
 	}else{

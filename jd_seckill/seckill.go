@@ -141,7 +141,12 @@ func (this *Seckill) SubmitSeckillOrder() bool {
 	skuId:=this.conf.Read("config","sku_id")
 	seckillNum:=this.conf.Read("config","seckill_num")
 	paymentPwd:=this.conf.Read("account","payment_pwd")
-	initInfo,_:=this.SeckillInitInfo()
+	initInfo,err:=this.SeckillInitInfo()
+
+	if err != nil {
+		log.Println("获取地址失败，时间还未到！")
+		return false
+	}
 	address:=gjson.Get(initInfo,"addressList").Array()
 	defaultAddress:=address[0]
 	isinvoiceInfo:=gjson.Get(initInfo,"invoiceInfo").Exists()
